@@ -1,1 +1,37 @@
-/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+body {
+    background: white;
+}
+
+.wid-50 {
+    max-width: 50%;
+}
+
+.bg-blue {
+    background: rgba(68, 97, 242, 1) !important;
+}
+
+.text-blue {
+    color: rgba(68, 97, 242, 1) !important;
+}
+
+.text-black {
+    color: black !important;
+}
+
+.text-white {
+    color: white !important;
+}
+
+.text-off {
+    color: rgba(108, 115, 127, 1) !important;
+}
+
+.br-20 {
+    border-radius: 20px;
+}
+
+.bg-gray {
+    background: rgba(240, 244, 252, 1) !important;
+}
