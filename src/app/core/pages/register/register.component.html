@@ -1,0 +1,89 @@
+<div class="d-flex justify-content-center align-items-center">
+    <div class="w-100" style="max-width: 500px;">
+        <h1 class="h2 text-dark fw-bold mb-4">Sign up</h1>
+        <form [formGroup]="registerForm">
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText id="username" formControlName="username" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">User Name</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Fname" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="Fname">First Name</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Lname" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="Lname">Last Name</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Email" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">Email</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" formControlName="password" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="password">Password</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" formControlName="rePassword"
+                        class="form-control bg-white text-dark" autocomplete="off" />
+                    <label for="rePassword">Confirm Password</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-4">
+                <p-floatlabel variant="in">
+                    <input formControlName="phone" pInputText type="tel" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="in_label">Phone</label>
+                </p-floatlabel>
+            </div>
+
+            <p class="text-center text-dark mt-2 mb-3">
+                Already have an account ? <a routerLink="/auth/login"
+                    class="text-primary text-decoration-none">Login</a>
+            </p>
+
+            <div class="button mb-4">
+                <p-button (click)="submit()" size="large" styleClass="bg-primary w-100 text-white border-none"
+                    [disabled]="registerForm.invalid" label="Create Account" />
+            </div>
+        </form>
+
+        <p class="text-muted text-center my-4">Or Continue with</p>
+
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-google"></i>
+            </span>
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-twitter"></i>
+            </span>
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-facebook"></i>
+            </span>
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-apple"></i>
+            </span>
+        </div>
+    </div>
+</div>

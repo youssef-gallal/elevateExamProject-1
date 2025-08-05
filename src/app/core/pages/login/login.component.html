@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-center align-items-center mt-5 ">
+    <div class="w-100" style="max-width: 400px;">
+        <h1 class="text-dark fw-bold mb-3">Sign in</h1>
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Email" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">Enter Email</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" formControlName="password" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">Password</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="mt-2 mb-3 text-end">
+                <a class="text-primary text-decoration-none" routerLink="/auth/forgetPassword">Recover password?</a>
+            </div>
+
+            <div class="button mb-4">
+                <p-button (click)="submit()" size="large" styleClass="bg-primary w-100 text-white border-none"
+                    [disabled]="loginForm.invalid" label="Sign in" />
+            </div>
+        </form>
+
+        <p class="text-muted text-center my-4">Or Continue with</p>
+
+        <div class="d-flex justify-content-center gap-3">
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-google"></i>
+            </span>
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-twitter"></i>
+            </span>
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-facebook"></i>
+            </span>
+            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
+                <i class="pi pi-apple"></i>
+            </span>
+        </div>
+    </div>
+</div>
