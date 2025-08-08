@@ -5,8 +5,9 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { Base_Url } from 'auth';
+import { authInterceptor } from './auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,9 +17,6 @@ export const appConfig: ApplicationConfig = {
         preset: Aura
       }
     }),
-
-
-
     {
       provide: Base_Url,
       useValue: 'https://exam.elevateegy.com'
@@ -26,8 +24,9 @@ export const appConfig: ApplicationConfig = {
 
 
 
-    provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(),
-
+    provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(
+      withInterceptors([authInterceptor])
+    )
   ]
 }
 

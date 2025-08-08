@@ -35,3 +35,20 @@ body {
 .bg-gray {
     background: #f7f7f7 !important;
 }
+
+input:focus {
+    border: 2px solid blue !important;
+}
+
+input {
+    background: white !important;
+
+}
+
+::ng-deep .p-card {
+    background-color: white !important;
+}
+
+::ng-deep .p-iconfield input {
+    background-color: white !important;
+}

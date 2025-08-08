@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,8 +17,9 @@ import { AuthService } from 'auth';
 })
 export class LoginComponent implements OnInit {
 
-  _AuthService = inject(AuthService)
   loginForm: FormGroup | any;
+  constructor(private router: Router, private AuthService: AuthService) { }
+
   ngOnInit() {
     this.initForm()
   }
@@ -36,13 +37,10 @@ export class LoginComponent implements OnInit {
     }
 
 
-    this._AuthService.login(model).subscribe({
-      next: (res) => console.log(res),
-
+    this.AuthService.login(model).subscribe((res: any) => {
+      console.log(res);
+      localStorage.setItem('token', res.token)
     });
-
-
-
+    this.router.navigate(['/Dashboard'])
   }
-
 }

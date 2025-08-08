@@ -1,0 +1,8 @@
+::ng-deep .p-card {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* ::ng-deep .p-iconfield input {
+    background-color: white !important;
+} */

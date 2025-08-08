@@ -1,0 +1,19 @@
+<div class="mb-4 p-8" *ngFor="let item of exam">
+    <p-card>
+        <div class=" d-flex justify-content-between">
+            <div>
+                <span class="d-block mb-2">{{item.title}}</span>
+                <span class="d-block text-off">{{item.numberOfQuestions}} Question</span>
+            </div>
+            <div>
+                <span class="d-block mb-2"> {{item.duration}} Minutes</span>
+                <button class="btn btn-primary px-4">Start</button>
+            </div>
+        </div>
+    </p-card>
+</div>
+@if (loading)
+{
+<div class="flex justify-content-center text-center" style=" height: 200px;">
+    <p-progress-spinner ariaLabel=" loading" />
+</div>}

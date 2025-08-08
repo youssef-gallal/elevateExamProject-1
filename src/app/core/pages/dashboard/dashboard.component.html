@@ -1,0 +1,31 @@
+<div class="d-flex p-3">
+    <div class="sidebar-navigation p-3 position-sticky top-0 vh-100">
+        <div class="mb-4">
+            <img class="logo" src="/logo.png" alt="" />
+        </div>
+        <p-panelmenu [model]="items" styleClass="w-full md:w-80 ">
+            <ng-template #item let-item>
+                <ng-container>
+                    <div class="d-flex align-items-center">
+                        <a class="flex align-items-center p-2 cursor-pointer" routerLink="/home" routerLinkActive="">
+                            <span [class]="item.icon" class="text-blue"></span>
+                            <span class="ms-3">{{ item.label }}</span>
+                        </a>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </p-panelmenu>
+    </div>
+
+    <div class="p-3 container">
+        <div class="d-flex mb-5 " style="z-index: 1000; top: 0">
+            <p-iconfield class="">
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" class="text-black" pSize="large" />
+                <button class="btn btn-primary p-2 mx-5">Start Quiz</button>
+            </p-iconfield>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+
+</div>

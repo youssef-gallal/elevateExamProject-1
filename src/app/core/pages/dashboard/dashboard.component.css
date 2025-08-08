@@ -1,0 +1,45 @@
+/* .sidebar-navigation {
+    min-height: 100vh !important;
+    width: 278px !important;
+} */
+
+.sidebar-navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 278px;
+    background: white;
+    z-index: 1000;
+    overflow-y: auto;
+    /* Makes sidebar scrollable if content exceeds height */
+}
+
+.main-content {
+    margin-left: 278px;
+    width: calc(100% - 278px);
+    min-height: 100vh;
+}
+
+.logo {
+    max-width: 150px;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+::ng-deep .p-panelmenu div {
+    background-color: white !important;
+    border: none !important;
+}
+
+::ng-deep .p-panelmenu div a {
+    color: rgba(105, 111, 121, 1);
+
+}
+
+::ng-deep .p-panelmenu div:hover {
+    background-color: #eee !important;
+}

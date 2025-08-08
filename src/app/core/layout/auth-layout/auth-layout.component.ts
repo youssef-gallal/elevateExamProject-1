@@ -8,7 +8,7 @@ import { RouterModule, RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-auth-layout',
-  imports: [AuthNavComponent, RouterModule, AuthIntroComponent, LoginComponent],
+  imports: [AuthNavComponent, RouterModule, AuthIntroComponent, LoginComponent, RegisterComponent],
   templateUrl: './auth-layout.component.html',
   styleUrl: './auth-layout.component.css'
 })
