@@ -1,24 +1,41 @@
-/* .sidebar-navigation {
-    min-height: 100vh !important;
-    width: 278px !important;
-} */
+::ng-deep .p-panelmenu div {
+    background-color: white !important;
+    border: none !important;
+}
+
+::ng-deep .p-panelmenu div a {
+    color: rgba(105, 111, 121, 1);
+}
+
+::ng-deep .p-panelmenu div:hover {
+    background-color: #eee !important;
+}
+
+::ng-deep .p-panelmenu div .routerLinkActive {
+    background-color: blue !important;
+}
+
+::ng-deep .p-iconfield input {
+    border: white;
+    width: 100%;
+}
 
 .sidebar-navigation {
     position: fixed;
-    top: 0;
     left: 0;
+    top: 0;
     height: 100vh;
     width: 278px;
     background: white;
     z-index: 1000;
-    overflow-y: auto;
-    /* Makes sidebar scrollable if content exceeds height */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
 .main-content {
     margin-left: 278px;
     width: calc(100% - 278px);
-    min-height: 100vh;
+    padding: 1rem;
 }
 
 .logo {
@@ -29,17 +46,42 @@ a {
     text-decoration: none;
 }
 
+/* Mobile styles */
+@media (max-width: 767.98px) {
+    .sidebar-navigation {
+        transform: translateX(-100%);
+        z-index: 1100;
+    }
 
-::ng-deep .p-panelmenu div {
-    background-color: white !important;
-    border: none !important;
-}
+    .sidebar-navigation.d-none {
+        transform: translateX(-100%);
+    }
 
-::ng-deep .p-panelmenu div a {
-    color: rgba(105, 111, 121, 1);
+    .sidebar-navigation:not(.d-none) {
+        transform: translateX(0);
+    }
 
-}
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
 
-::ng-deep .p-panelmenu div:hover {
-    background-color: #eee !important;
+    .mobile-menu-btn {
+        background: transparent;
+        border: none;
+        padding: 0.5rem;
+        font-size: 1.25rem;
+        color: #696f79;
+        z-index: 1200;
+    }
+
+    /* .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+    }*/
 }

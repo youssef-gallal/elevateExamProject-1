@@ -10,7 +10,7 @@
     <div class="">
         <div class="row">
             <div class="col-md-4 mb-3" *ngFor="let item of showAll ? subjects : subjects.slice(0, 6)">
-                <p-card (click)="item._id ? openExam(item._id) : null">
+                <p-card (click)="item._id ? getexam(item._id) : null">
                     <ng-template pTemplate=" content">
                         <div class="subject-card">
                             <img [src]="item.icon" alt="{{ item.title }}" class="subject-icon">

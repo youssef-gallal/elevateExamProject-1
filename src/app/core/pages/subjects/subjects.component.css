@@ -4,14 +4,15 @@
 
 ::ng-deep .p-iconfield input {
     background-color: white !important;
-
-
 }
 
 .shadow-lg {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
 }
 
+a {
+    text-decoration: none;
+}
 
 
 .subject-card {

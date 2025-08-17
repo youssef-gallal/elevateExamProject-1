@@ -28,8 +28,12 @@ body {
     color: rgba(108, 115, 127, 1) !important;
 }
 
-.br-20 {
-    border-radius: 20px;
+.br-50 {
+    border-radius: 50px;
+}
+
+.br-30 {
+    border-radius: 30px;
 }
 
 .bg-gray {
@@ -51,4 +55,5 @@ input {
 
 ::ng-deep .p-iconfield input {
     background-color: white !important;
+
 }
