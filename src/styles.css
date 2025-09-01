@@ -9,23 +9,23 @@ body {
 }
 
 .bg-blue {
-    background: rgba(68, 97, 242, 1) !important;
+    background: rgba(68, 97, 242, 1);
 }
 
 .text-blue {
-    color: rgba(68, 97, 242, 1) !important;
+    color: rgba(68, 97, 242, 1);
 }
 
 .text-black {
-    color: black !important;
+    color: black;
 }
 
 .text-white {
-    color: white !important;
+    color: white;
 }
 
 .text-off {
-    color: rgba(108, 115, 127, 1) !important;
+    color: rgba(108, 115, 127, 1);
 }
 
 .br-50 {
@@ -37,23 +37,22 @@ body {
 }
 
 .bg-gray {
-    background: #f7f7f7 !important;
+    background: #f7f7f7;
 }
 
 input:focus {
-    border: 2px solid blue !important;
+    border: 2px solid blue;
 }
 
 input {
-    background: white !important;
+    background: white;
 
 }
 
 ::ng-deep .p-card {
-    background-color: white !important;
+    background-color: white;
 }
 
 ::ng-deep .p-iconfield input {
-    background-color: white !important;
-
+    background-color: white;
 }

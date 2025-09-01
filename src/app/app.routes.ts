@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 export const routes: Routes = [
+
     {
-        path: 'auth', loadComponent: () => import('./core/layout/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
+        path: '', loadComponent: () => import('./core/layout/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
         children: [
             { path: "", redirectTo: 'login', pathMatch: 'full' },
             { path: 'login', loadComponent: () => import('./core/pages/login/login.component').then(c => c.LoginComponent) },

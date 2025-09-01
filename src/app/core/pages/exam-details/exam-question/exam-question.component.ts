@@ -1,20 +1,22 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, inject, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { ProgressSpinner } from "primeng/progressspinner";
 import { Store } from '@ngrx/store';
 import { loader } from '../../../../store/questions/questions.action';
 import { selectQuestions, selectQuestionsLoading } from '../../../../store/questions/question.selector';
+import { ExamResultComponent } from '../exam-result/exam-result.component';
 
 @Component({
   selector: 'app-exam-question',
   standalone: true,
-  imports: [FormsModule, RadioButtonModule, CommonModule, AsyncPipe],
+  imports: [FormsModule, RadioButtonModule, CommonModule, AsyncPipe, ProgressSpinner],
   templateUrl: './exam-question.component.html',
   styleUrl: './exam-question.component.css'
 })
 export class ExamQuestionComponent implements OnChanges {
+
   @Input() questionsId: string | undefined;
   currentIndex = 0;
   selectedAnswers: { [key: string]: string } = {};
@@ -27,10 +29,12 @@ export class ExamQuestionComponent implements OnChanges {
   incorrectQuestions: any[] = [];
   reviewIndex = 0;
   originalQuestions: any[] = [];
+  @Output() submitted = new EventEmitter<{ score: any, incorrect: any[], selected: any }>();
 
   private _store = inject(Store);
   questions$ = this._store.select(selectQuestions);
   loading$ = this._store.select(selectQuestionsLoading);
+  visible: any;
 
   ngOnChanges() {
     this.currentIndex = 0;
@@ -41,7 +45,9 @@ export class ExamQuestionComponent implements OnChanges {
       this._store.dispatch(loader({ examId: this.questionsId }));
     }
   }
-
+  get totalQuestions(): number {
+    return this.originalQuestions.length;
+  }
   nextQuestion(questionsLength: number) {
     if (this.currentIndex < questionsLength - 1) {
       this.currentIndex++;
@@ -54,18 +60,18 @@ export class ExamQuestionComponent implements OnChanges {
     }
   }
 
-  selectAnswer(qIndex: number, key: string) {
-    this.selectedAnswers[qIndex] = key;
+  selectAnswer(q: any, key: string) {
+    this.selectedAnswers[q._id] = key;
   }
-
 
   calculateResults(questions: any[]) {
     this.correctAnswers = 0;
     this.incorrectAnswers = 0;
 
-    questions.forEach((question: any, index: number) => {
-      const selectedAnswer = this.selectedAnswers[index];
+    questions.forEach((question: any) => {
+      const selectedAnswer = this.selectedAnswers[question._id]; // ✅ use _id
       const correctAnswer = question.correct;
+
       if (selectedAnswer === correctAnswer) {
         this.correctAnswers++;
       } else {
@@ -82,19 +88,20 @@ export class ExamQuestionComponent implements OnChanges {
 
   submitAnswers(questions: any[]) {
     this.calculateResults(questions);
-    this.showResults = true;
-    this.showQuestions = false;
     this.scorePercentage = Math.round((this.correctAnswers / questions.length) * 100);
 
-    // Store original questions and incorrect questions
     this.originalQuestions = [...questions];
-    this.incorrectQuestions = questions.filter((q, i) =>
-      this.selectedAnswers[i] !== q.correct
+    this.incorrectQuestions = questions.filter(q =>
+      this.selectedAnswers[q._id] !== q.correct
     );
-  }
 
+    this.submitted.emit({
+      score: { percentage: this.scorePercentage, correct: this.correctAnswers, incorrect: this.incorrectAnswers },
+      incorrect: this.incorrectQuestions,
+      selected: this.selectedAnswers
+    });
+  }
   getSelectedAnswerForReview(index: number): string {
-    // Use the stored originalQuestions instead of the parameter
     const originalIndex = this.originalQuestions.findIndex(q =>
       q._id === this.incorrectQuestions[index]._id
     );

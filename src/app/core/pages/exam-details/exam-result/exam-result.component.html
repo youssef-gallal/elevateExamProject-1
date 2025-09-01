@@ -1,0 +1,24 @@
+<div class="results-container">
+    <div class="d-flex">
+        <div class="circular-progress" [style.--percentage]="score.percentage">
+            <div class="inner-circle">
+                <span class="percentage">{{ score.percentage }}%</span>
+            </div>
+        </div>
+
+        <div class="score-breakdown">
+            <div class="correct">
+                <span class="label">Correct</span>
+                <span class="count">{{ score.correct }}</span>
+            </div>
+            <div class="incorrect">
+                <span class="label">Incorrect</span>
+                <span class="count">{{ score.incorrect }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons mt-3">
+        <button class="btn btn-primary" (click)="review.emit()">Review wrong Answers</button>
+    </div>
+</div>

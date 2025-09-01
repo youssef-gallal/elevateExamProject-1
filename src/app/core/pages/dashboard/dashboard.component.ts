@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { InputIcon } from 'primeng/inputicon';
 import { AvatarModule } from 'primeng/avatar';
-
 import { IconField } from 'primeng/iconfield';
 import { ButtonModule } from 'primeng/button';
 import { ServicesService } from '../service/services.service';
@@ -34,16 +33,13 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Quiz History',
         icon: 'pi pi-history',
-        command: () => {
-          this.route.navigateByUrl('/auth/login')
-        }
       },
       {
         label: 'Log Out',
         icon: 'pi pi-sign-out',
         command: () => {
           localStorage.removeItem('token');
-          this.route.navigateByUrl('/auth/login')
+          this.route.navigateByUrl('/login')
         }
       }
     ]

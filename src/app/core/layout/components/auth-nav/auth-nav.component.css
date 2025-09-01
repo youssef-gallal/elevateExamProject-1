@@ -4,7 +4,7 @@ li {
 }
 
 a {
-    text-decoration: none !important;
-    border: 2px solid #eee !important;
+    text-decoration: none;
+    border: 2px solid #eee;
     border-radius: 20px;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Adaptor } from '../interface/adapt';
-import { Forget } from '../interface/forget';
+import { Adaptor, Forget } from '../interface/adapt';
+import { AdaptedAuthResponse, AdaptedForgetResponse, AdaptedVerifyResponse, AuthResponse, ForgetResponse, ResetResponse, verifyCodeResponse } from '../interface/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +8,34 @@ import { Forget } from '../interface/forget';
 export class AuthAdaptorService implements Adaptor, Forget {
 
   constructor() { }
+  forget(data: ForgetResponse): AdaptedForgetResponse {
+    return {
+      message: data.message,
+      info: data.info
+    };
+  }
 
-  adapt(data: any) {
+  verify(data: verifyCodeResponse): AdaptedVerifyResponse {
+    return {
+      message: data.status
+    };
+  }
+
+  Reset(data: ResetResponse): AdaptedVerifyResponse {
+    return {
+      message: data.message
+    };
+  }
+
+
+  adapt(data: AuthResponse): AdaptedAuthResponse {
     return {
       message: data.message,
       token: data.token,
       email: data.user.email,
-    }
+    };
   }
-  forget(data: any) {
-    return {
-      message: data.message,
-      info: data.info
-    }
-  }
+
+
 }
+

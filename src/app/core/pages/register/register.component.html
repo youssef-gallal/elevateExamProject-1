@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="d-flex justify-content-center align-items-center">
     <div class="w-100" style="max-width: 500px;">
         <h1 class="h2 text-dark fw-bold mb-4">Sign up</h1>
@@ -8,6 +9,15 @@
                         autocomplete="off" />
                     <label for="username">User Name</label>
                 </p-floatlabel>
+                @if(formControls['username'].invalid && formControls['username'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['username'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['username'].hasError('minlength')){
+                    <span>UserName must be at least 3 characters</span>
+                    }
+                </div>
+                }
             </div>
 
             <div class="mb-3">
@@ -16,6 +26,15 @@
                         autocomplete="off" />
                     <label for="Fname">First Name</label>
                 </p-floatlabel>
+                @if(formControls['Fname'].invalid && formControls['Lname'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['Fname'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['Fname'].hasError('minlength')){
+                    <span>firstName must be at least 3 characters</span>
+                    }
+                </div>
+                }
             </div>
 
             <div class="mb-3">
@@ -24,6 +43,15 @@
                         autocomplete="off" />
                     <label for="Lname">Last Name</label>
                 </p-floatlabel>
+                @if(formControls['Lname'].invalid && formControls['Lname'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['Lname'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['Lname'].hasError('minlength')){
+                    <span>LastName must be at least 3 characters</span>
+                    }
+                </div>
+                }
             </div>
 
             <div class="mb-3">
@@ -32,6 +60,15 @@
                         autocomplete="off" />
                     <label for="username">Email</label>
                 </p-floatlabel>
+                @if(formControls['Email'].invalid && formControls['Email'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['Email'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['Email'].hasError('email')){
+                    <span>Not email format</span>
+                    }
+                </div>
+                }
             </div>
 
             <div class="mb-3">
@@ -40,6 +77,16 @@
                         autocomplete="off" />
                     <label for="password">Password</label>
                 </p-floatlabel>
+                @if(formControls['password'].invalid && formControls['password'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['password'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['password'].hasError('minlength')){
+                    <span>Password must be at least 8 characters</span>
+                    }
+                </div>
+                }
+
             </div>
 
             <div class="mb-3">
@@ -48,6 +95,14 @@
                         class="form-control bg-white text-dark" autocomplete="off" />
                     <label for="rePassword">Confirm Password</label>
                 </p-floatlabel>
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['rePassword'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['rePassword'].hasError('minlength')){
+                    <span>ConfirmPassword must be at least 8 characters</span>
+                    }
+                </div>
+
             </div>
 
             <div class="mb-4">
@@ -56,6 +111,13 @@
                         autocomplete="off" />
                     <label for="in_label">Phone</label>
                 </p-floatlabel>
+                @if(formControls['phone'].invalid && formControls['phone'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['phone'].hasError('required')){
+                    <span>Required</span>
+                    }
+                </div>
+                }
             </div>
 
             <p class="text-center text-dark mt-2 mb-3">
@@ -68,22 +130,5 @@
                     [disabled]="registerForm.invalid" label="Create Account" />
             </div>
         </form>
-
-        <p class="text-muted text-center my-4">Or Continue with</p>
-
-        <div class="d-flex justify-content-center gap-3 mb-4">
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-google"></i>
-            </span>
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-twitter"></i>
-            </span>
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-facebook"></i>
-            </span>
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-apple"></i>
-            </span>
-        </div>
     </div>
 </div>

@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,31 +8,84 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { Button } from "primeng/button";
 import { InputNumberModule } from 'primeng/inputnumber';
 import { AuthService } from 'auth';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-register',
-  imports: [RouterLink, FloatLabel, RouterModule, RouterLink, InputNumberModule, PasswordModule, FormsModule, ReactiveFormsModule, InputTextModule, IftaLabelModule, Button],
+  imports: [ToastModule, RouterLink, FloatLabel, RouterModule, RouterLink, InputNumberModule, PasswordModule, FormsModule, ReactiveFormsModule, InputTextModule, IftaLabelModule, Button],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
+  providers: [MessageService],
+
 })
-export class RegisterComponent implements OnInit {
-  _authService = inject(AuthService)
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm: FormGroup | any;
+  private destroy$ = new Subject<void>();
+  constructor(private messageService: MessageService, private router: Router,
+    private authService: AuthService,) { }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   ngOnInit() {
     this.initForm()
   }
-
   initForm() {
     this.registerForm = new FormGroup({
-      Email: new FormControl("", Validators.required),
-      Fname: new FormControl("", Validators.required),
-      username: new FormControl("", Validators.required),
-      Lname: new FormControl("", Validators.required),
-      rePassword: new FormControl("", Validators.required),
-      password: new FormControl("", Validators.required),
-      phone: new FormControl("", Validators.required),
-    })
+      Email: new FormControl("", [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(100)
+      ]),
+      Fname: new FormControl("", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50)
+      ]),
+      username: new FormControl("", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20)
+      ]),
+      Lname: new FormControl("", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50)
+      ]),
+      rePassword: new FormControl("", [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(50)
+      ]),
+      password: new FormControl("", [
+        Validators.required,
+        Validators.minLength(8),
+      ]),
+      phone: new FormControl("", [
+        Validators.required,
+      ])
+    },);
   }
+
+
+  get formControls() {
+    return this.registerForm.controls;
+  }
+
+  handleSubmitForm() {
+    console.log(this.registerForm.value);
+  }
+
   submit() {
+    if (this.registerForm.invalid) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields correctly'
+      });
+      return;
+    }
     const model = {
       email: this.registerForm.value.Email,
       username: this.registerForm.value.username,
@@ -44,13 +97,24 @@ export class RegisterComponent implements OnInit {
     }
     console.log(model);
 
-    this._authService.register(model).subscribe({
-      next: (res) => console.log(res),
-      error(err) {
-        console.log(err);
-
-      },
-
-    })
+    this.authService.register(model)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.token) {
+            this.messageService.add({ severity: 'success', summary: 'success', detail: 'login successful', life: 1500 });
+            setTimeout(() => {
+              this.router.navigate(['/auth/login']);
+            }, 1000);
+          }
+          else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Login Failed',
+              detail: 'Invalid credentials'
+            });
+          }
+        }
+      });
   }
 }

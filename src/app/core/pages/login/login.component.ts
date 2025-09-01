@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IftaLabelModule } from 'primeng/iftalabel';
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from 'auth';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,14 +20,16 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './login.component.css',
   providers: [MessageService],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup | any
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private messageService: MessageService) { }
-
+  private destroy$ = new Subject<void>();
+  constructor(private messageService: MessageService, private router: Router,
+    private authService: AuthService,) { }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   ngOnInit() {
     this.initForm();
   }
@@ -34,10 +37,16 @@ export class LoginComponent implements OnInit {
   initForm() {
     this.loginForm = new FormGroup({
       Email: new FormControl("", [Validators.required, Validators.email]),
-      password: new FormControl("", Validators.required),
+      password: new FormControl("", [Validators.required, Validators.minLength(8)])
     });
   }
+  get formControls() {
+    return this.loginForm.controls;
+  }
 
+  handleSubmitForm() {
+    console.log(this.loginForm.value);
+  }
   submit() {
     if (this.loginForm.invalid) {
       this.messageService.add({
@@ -52,23 +61,24 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.value.password
     };
 
-    this.authService.login(model).subscribe({
-      next: (res) => {
-        if (res.token) {
-          this.messageService.add({ severity: 'success', summary: 'success', detail: 'login successful', life: 1500 });
-          localStorage.setItem('token', res.token);
-          setTimeout(() => {
-            this.router.navigate(['/Dashboard']);
-          }, 1500);
+    this.authService.login(model)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (res) => {
+          if (res.token) {
+            this.messageService.add({ severity: 'success', summary: 'success', detail: 'login successful', life: 1500 });
+            localStorage.setItem('token', res.token);
+            setTimeout(() => {
+              this.router.navigate(['/Dashboard']);
+            }, 1000);
+          }
+          else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Login Failed',
+              detail: 'Invalid credentials'
+            });
+          }
         }
-        else {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Login Failed',
-            detail: 'Invalid credentials'
-          });
-        }
-      }
-    });
+      });
   }
 }

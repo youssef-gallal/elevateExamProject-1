@@ -9,7 +9,18 @@
                         autocomplete="off" />
                     <label for="username">Enter Email</label>
                 </p-floatlabel>
+                @if(formControls['Email'].invalid && formControls['Email'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['Email'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['Email'].hasError('email')){
+                    <span>Not email format</span>
+                    }
+                </div>
+                }
+
             </div>
+
 
             <div class="mb-3">
                 <p-floatlabel variant="in">
@@ -17,10 +28,19 @@
                         autocomplete="off" />
                     <label for="username">Password</label>
                 </p-floatlabel>
+                @if(formControls['password'].invalid && formControls['password'].touched){
+                <div id="nameHelp" class="form-text text-danger">
+                    @if(formControls['password'].hasError('required')){
+                    <span>Required</span>
+                    }@else if(formControls['password'].hasError('minlength')){
+                    <span>Password must be at least 8 characters</span>
+                    }
+                </div>
+                }
             </div>
 
             <div class="mt-2 mb-3 text-end">
-                <a class="text-primary text-decoration-none" routerLink="/auth/forgetPassword">Recover password?</a>
+                <a class="text-primary text-decoration-none" routerLink="/forgetPassword">Recover password?</a>
             </div>
 
             <div class="button mb-4">
@@ -28,22 +48,5 @@
                     [disabled]="loginForm.invalid" label="Sign in" />
             </div>
         </form>
-
-        <p class="text-muted text-center my-4">Or Continue with</p>
-
-        <div class="d-flex justify-content-center gap-3">
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-google"></i>
-            </span>
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-twitter"></i>
-            </span>
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-facebook"></i>
-            </span>
-            <span class="p-3 rounded-circle bg-light hover-bg-gray-200 cursor-pointer fs-5 text-dark">
-                <i class="pi pi-apple"></i>
-            </span>
-        </div>
     </div>
 </div>

@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
         }),
         {
             provide: Base_Url,
-            useValue: 'https://exam.elevateegy.com'
+            useValue: 'https://exam.elevateegy.com/api/v1'
         },
         provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([authInterceptor])),
         provideStore({ questions: questionsReducer }),
