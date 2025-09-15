@@ -27,7 +27,7 @@
         </div>
     </div>
 </p-card>
-@if (loading)
+@if ( loader$| async)
 {<div class="flex justify-content-center text-center" style=" height: 200px;">
     <p-progress-spinner ariaLabel=" loading" />
 </div>}

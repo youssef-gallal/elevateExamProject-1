@@ -1,24 +1,26 @@
-import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
-import { AuthService } from 'auth';
-import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { AuthService } from 'auth';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 @Component({
   selector: 'app-forget-password',
   standalone: true,
   imports: [
     CommonModule,
-    FloatLabelModule,
-    PasswordModule,
-    FormsModule,
     ReactiveFormsModule,
+    FloatLabelModule,
     InputTextModule,
+    PasswordModule,
     ButtonModule,
     ToastModule,
   ],
@@ -27,137 +29,86 @@ import { Router } from '@angular/router';
   styleUrls: ['./forgetpassword.component.css']
 })
 export class ForgetPasswordComponent {
-  _AuthService = inject(AuthService)
+  private _authService = inject(AuthService);
+  private _router = inject(Router);
+  private _msg = inject(MessageService);
 
-  currentStep: 'email' | 'verify' | 'reset' = 'email';
-  forgetForm: FormGroup;
+  private destroy$ = new Subject<void>();
 
-  constructor(private messageService: MessageService, private router: Router) {
-    this.forgetForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      verifyCode: new FormControl('', Validators.required),
-      newPassword: new FormControl('', Validators.required),
-    });
+  step: 'email' | 'verify' | 'reset' = 'email';
+
+  emailForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+  });
+
+  verifyForm = new FormGroup({
+    code: new FormControl('', [Validators.required, Validators.minLength(6)]),
+  });
+
+  resetForm = new FormGroup({
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+  });
+
+  submitEmail() {
+    if (this.emailForm.invalid) return;
+
+    const payload = { email: this.emailForm.value.email! };
+
+    this._authService.forgetPassword(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this._msg.add({ severity: 'success', summary: 'Email Sent', detail: 'Verification code sent' });
+          this.step = 'verify';
+        },
+        error: (err) => {
+          this._msg.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Failed to send email' });
+        }
+      });
   }
-  isStepValid(): boolean {
-    switch (this.currentStep) {
-      case 'email':
-        return this.forgetForm.get('email')?.valid ?? false;
 
-      case 'verify':
-        return this.forgetForm.get('verifyCode')?.valid ?? false;
+  submitVerify() {
+    if (this.verifyForm.invalid) return;
 
-      case 'reset':
-        return (
-          this.forgetForm.get('email')?.valid &&
-          this.forgetForm.get('newPassword')?.valid
-        ) ?? false;
+    const verifyData: any = { resetCode: this.verifyForm.value.code! };
 
-      default:
-        return false;
-    }
+    this._authService.verifyCode(verifyData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this._msg.add({ severity: 'success', summary: 'Verified', detail: 'Code verified successfully' });
+          this.step = 'reset';
+        },
+        error: (err) => {
+          this._msg.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Invalid code' });
+        }
+      });
   }
 
-  resend() {
-    const model = {
-      email: this.forgetForm.value.email,
+  submitReset() {
+    if (this.resetForm.invalid || this.emailForm.invalid) return;
+
+    const payload = {
+      email: this.emailForm.value.email!,
+      newPassword: this.resetForm.value.password!,
     };
 
-    this._AuthService.forgetPassword(model).subscribe({
-      next: (res: any) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Verification code resent to your email'
-        });
-      },
-      error: (err: any) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: err?.error?.message || 'Failed to resend code'
-        });
-      }
-    });
+    this._authService.resetPassword(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this._msg.add({ severity: 'success', summary: 'Password Reset', detail: 'Password updated successfully' });
+          this._router.navigate(['/login']);
+        },
+        error: (err) => {
+          this._msg.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Reset failed' });
+        }
+      });
   }
 
-  submit() {
-    switch (this.currentStep) {
-      case 'email':
-        const model = {
-          email: this.forgetForm.value.email,
-        }
-        this._AuthService.forgetPassword(model).subscribe({
-          next: (res: any) => {
-            console.log(res);
-
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Email Sent',
-              detail: 'Verification code has been sent to your email'
-            });
-            this.currentStep = 'verify';
-          },
-          error: (err: any) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: err?.error?.message || 'Failed to send verification email'
-            });
-          }
-        });
-        break;
-
-      case 'verify':
-        const data: any = {
-          resetCode: this.forgetForm.value.verifyCode,
-        }
-        this._AuthService.verifyCode(data).subscribe({
-          next: (res: any) => {
-            console.log(res);
-
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Verified',
-              detail: 'Code verified successfully'
-            });
-            this.currentStep = 'reset';
-          },
-          error: (err: any) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Invalid Code',
-              detail: err?.error?.message || 'Verification failed'
-            });
-          }
-        });
-        break;
-
-      case 'reset':
-        const reset: any = {
-          email: this.forgetForm.value.email,
-          newPassword: this.forgetForm.value.newPassword,
-        }
-        this._AuthService.resetPassword(reset).subscribe({
-          next: (res: any) => {
-            console.log(res);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Password Reset',
-              detail: 'Your password has been successfully reset'
-            });
-            this.router.navigateByUrl('/login')
-          },
-          error: (err: any) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: err?.error?.message || 'Failed to reset password'
-            });
-          }
-        });
-        break;
-    }
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
-
 }
+

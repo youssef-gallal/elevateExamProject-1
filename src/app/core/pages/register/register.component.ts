@@ -11,9 +11,10 @@ import { AuthService } from 'auth';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
+import { FormErrorComponent } from "../form-error/form-error.component";
 @Component({
   selector: 'app-register',
-  imports: [ToastModule, RouterLink, FloatLabel, RouterModule, RouterLink, InputNumberModule, PasswordModule, FormsModule, ReactiveFormsModule, InputTextModule, IftaLabelModule, Button],
+  imports: [ToastModule, RouterLink, FloatLabel, RouterModule, RouterLink, InputNumberModule, PasswordModule, FormsModule, ReactiveFormsModule, InputTextModule, IftaLabelModule, Button, FormErrorComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
   providers: [MessageService],
@@ -73,9 +74,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return this.registerForm.controls;
   }
 
-  handleSubmitForm() {
-    console.log(this.registerForm.value);
-  }
 
   submit() {
     if (this.registerForm.invalid) {

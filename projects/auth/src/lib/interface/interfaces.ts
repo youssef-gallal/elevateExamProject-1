@@ -32,10 +32,7 @@ export interface AdaptedAuthResponse {
     email: string;
 }
 
-export interface AdaptedforgetResponse {
-    message: string;
-    info: string;
-}
+
 export interface AdaptedVerifyResponse {
     message: string;
 }

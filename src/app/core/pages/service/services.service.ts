@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { env } from '../../../enviroments/env';
 import { map, Observable } from 'rxjs';
 import { Question } from '../../../store/questions/question.model';
-import { SubjectsResponse } from '../../interfaces';
+import { ExamResponse, SubjectsResponse } from '../../interfaces';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +19,7 @@ export class ServicesService {
   }
 
   getExamOnSubject(id: string) {
-    return this.http.get(`${env.baseUrl}exams?subject=${id}`);
+    return this.http.get<ExamResponse>(`${env.baseUrl}exams?subject=${id}`);
   }
 
 

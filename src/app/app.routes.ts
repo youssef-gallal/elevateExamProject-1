@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
+import { authGuard, guestGuard } from './auth/guards/auth.guard';
+
 export const routes: Routes = [
 
     {
         path: '', loadComponent: () => import('./core/layout/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
         children: [
             { path: "", redirectTo: 'login', pathMatch: 'full' },
-            { path: 'login', loadComponent: () => import('./core/pages/login/login.component').then(c => c.LoginComponent) },
-            { path: 'register', loadComponent: () => import('./core/pages/register/register.component').then(c => c.RegisterComponent) },
-            { path: 'forgetPassword', loadComponent: () => import('./core/pages/forgetpassword/forgetpassword.component').then(c => c.ForgetPasswordComponent) }
+            { path: 'login', canActivate: [guestGuard], loadComponent: () => import('./core/pages/login/login.component').then(c => c.LoginComponent) },
+            { path: 'register', canActivate: [guestGuard], loadComponent: () => import('./core/pages/register/register.component').then(c => c.RegisterComponent) },
+            { path: 'forgetPassword', canActivate: [guestGuard], loadComponent: () => import('./core/pages/forgetpassword/forgetpassword.component').then(c => c.ForgetPasswordComponent) }
         ],
     },
     {
@@ -15,10 +17,10 @@ export const routes: Routes = [
         children: [
             { path: "", redirectTo: 'subjects', pathMatch: 'full' },
             {
-                path: 'subjects', loadComponent: () => import('./core/pages/subjects/subjects.component').then(c => c.SubjectsComponent),
+                path: 'subjects', canActivate: [authGuard], loadComponent: () => import('./core/pages/subjects/subjects.component').then(c => c.SubjectsComponent),
             },
             {
-                path: 'exam/:id', loadComponent: () => import('./core/pages/exam-details/exam-details.component').then(c => c.ExamDetailsComponent),
+                path: 'exam/:id', canActivate: [authGuard], loadComponent: () => import('./core/pages/exam-details/exam-details.component').then(c => c.ExamDetailsComponent),
             }
 
         ],

@@ -1,19 +1,19 @@
-<div class="results-container">
+<div class="results-container" *ngIf="score as s">
     <div class="d-flex">
-        <div class="circular-progress" [style.--percentage]="score.percentage">
+        <div class="circular-progress" [style.--percentage]="s.percentage">
             <div class="inner-circle">
-                <span class="percentage">{{ score.percentage }}%</span>
+                <span class="percentage">{{ s.percentage }}%</span>
             </div>
         </div>
 
         <div class="score-breakdown">
             <div class="correct">
                 <span class="label">Correct</span>
-                <span class="count">{{ score.correct }}</span>
+                <span class="count">{{ s.correct }}</span>
             </div>
             <div class="incorrect">
                 <span class="label">Incorrect</span>
-                <span class="count">{{ score.incorrect }}</span>
+                <span class="count">{{ s.incorrect }}</span>
             </div>
         </div>
     </div>

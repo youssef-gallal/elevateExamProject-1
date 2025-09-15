@@ -11,11 +11,12 @@ import { AuthService } from 'auth';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Subject, takeUntil } from 'rxjs';
+import { FormErrorComponent } from "../form-error/form-error.component";
 
 @Component({
   selector: 'app-login',
   imports: [RouterLink, FloatLabel, CommonModule, PasswordModule, FormsModule,
-    ReactiveFormsModule, InputTextModule, IftaLabelModule, Button, ToastModule],
+    ReactiveFormsModule, InputTextModule, IftaLabelModule, Button, ToastModule, FormErrorComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   providers: [MessageService],

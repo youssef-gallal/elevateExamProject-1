@@ -6,7 +6,7 @@ import { ProgressSpinner } from "primeng/progressspinner";
 import { Store } from '@ngrx/store';
 import { loader } from '../../../../store/questions/questions.action';
 import { selectQuestions, selectQuestionsLoading } from '../../../../store/questions/question.selector';
-import { ExamResultComponent } from '../exam-result/exam-result.component';
+import { Question } from '../../../interfaces';
 
 @Component({
   selector: 'app-exam-question',
@@ -16,38 +16,43 @@ import { ExamResultComponent } from '../exam-result/exam-result.component';
   styleUrl: './exam-question.component.css'
 })
 export class ExamQuestionComponent implements OnChanges {
-
   @Input() questionsId: string | undefined;
+
   currentIndex = 0;
   selectedAnswers: { [key: string]: string } = {};
-  showResults = false;
+  viewMode: 'questions' | 'results' | 'review' = 'questions';
   correctAnswers = 0;
   incorrectAnswers = 0;
-  showQuestions = true;
-  scorePercentage: number = 0;
-  reviewMode = false;
-  incorrectQuestions: any[] = [];
+  scorePercentage = 0;
+  incorrectQuestions: Question[] = [];
   reviewIndex = 0;
-  originalQuestions: any[] = [];
-  @Output() submitted = new EventEmitter<{ score: any, incorrect: any[], selected: any }>();
+  originalQuestions: Question[] = [];
+
+  @Output() submitted = new EventEmitter<{
+    score: { percentage: number; correct: number; incorrect: number };
+    incorrect: Question[];
+    selected: { [key: string]: string };
+  }>();
 
   private _store = inject(Store);
   questions$ = this._store.select(selectQuestions);
   loading$ = this._store.select(selectQuestionsLoading);
-  visible: any;
+
 
   ngOnChanges() {
     this.currentIndex = 0;
     this.selectedAnswers = {};
-    this.showResults = false;
+    this.viewMode = 'questions';
 
     if (this.questionsId) {
       this._store.dispatch(loader({ examId: this.questionsId }));
     }
   }
+
   get totalQuestions(): number {
     return this.originalQuestions.length;
   }
+
   nextQuestion(questionsLength: number) {
     if (this.currentIndex < questionsLength - 1) {
       this.currentIndex++;
@@ -60,16 +65,16 @@ export class ExamQuestionComponent implements OnChanges {
     }
   }
 
-  selectAnswer(q: any, key: string) {
+  selectAnswer(q: Question, key: string) {
     this.selectedAnswers[q._id] = key;
   }
 
-  calculateResults(questions: any[]) {
+  calculateResults(questions: Question[]) {
     this.correctAnswers = 0;
     this.incorrectAnswers = 0;
 
-    questions.forEach((question: any) => {
-      const selectedAnswer = this.selectedAnswers[question._id]; // ✅ use _id
+    questions.forEach((question: Question) => {
+      const selectedAnswer = this.selectedAnswers[question._id];
       const correctAnswer = question.correct;
 
       if (selectedAnswer === correctAnswer) {
@@ -81,12 +86,12 @@ export class ExamQuestionComponent implements OnChanges {
   }
 
   resetResults() {
-    this.showResults = false;
+    this.viewMode = 'questions';
     this.correctAnswers = 0;
     this.incorrectAnswers = 0;
   }
 
-  submitAnswers(questions: any[]) {
+  submitAnswers(questions: Question[]) {
     this.calculateResults(questions);
     this.scorePercentage = Math.round((this.correctAnswers / questions.length) * 100);
 
@@ -96,61 +101,48 @@ export class ExamQuestionComponent implements OnChanges {
     );
 
     this.submitted.emit({
-      score: { percentage: this.scorePercentage, correct: this.correctAnswers, incorrect: this.incorrectAnswers },
+      score: {
+        percentage: this.scorePercentage,
+        correct: this.correctAnswers,
+        incorrect: this.incorrectAnswers
+      },
       incorrect: this.incorrectQuestions,
       selected: this.selectedAnswers
     });
-  }
-  getSelectedAnswerForReview(index: number): string {
-    const originalIndex = this.originalQuestions.findIndex(q =>
-      q._id === this.incorrectQuestions[index]._id
-    );
-    return this.selectedAnswers[originalIndex];
-  }
 
-
+    this.viewMode = 'results';
+  }
+  getSelectedAnswerForReview(index: number): string | undefined {
+    const questionId = this.incorrectQuestions[index]._id;
+    return this.selectedAnswers[questionId];
+  }
   reviewAnswers() {
-    this.reviewMode = true;
-    this.showResults = false;
-    this.showQuestions = false;
+    this.viewMode = 'review';
     this.reviewIndex = 0;
   }
-
-  backToResults() {
-    this.reviewMode = false;
-    this.showResults = true;
-  }
-
-  nextReviewQuestion() {
-    if (this.reviewIndex < this.incorrectQuestions.length - 1) {
-      this.reviewIndex++;
+  next(totalQuestions: number) {
+    if (this.viewMode === 'questions') {
+      if (this.currentIndex < totalQuestions - 1) {
+        this.currentIndex++;
+      }
+    } else if (this.viewMode === 'review') {
+      if (this.reviewIndex < this.incorrectQuestions.length - 1) {
+        this.reviewIndex++;
+      }
     }
   }
-
-  prevReviewQuestion() {
-    if (this.reviewIndex > 0) {
-      this.reviewIndex--;
+  back() {
+    if (this.viewMode === 'questions') {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      }
+    } else if (this.viewMode === 'review') {
+      if (this.reviewIndex > 0) {
+        this.reviewIndex--;
+      }
+    } else if (this.viewMode === 'results') {
+      this.viewMode = 'questions';
     }
-  }
-  backToQuestions() {
-    this.showResults = false;
-    this.showQuestions = true;
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,7 +8,11 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ServicesService } from '../service/services.service';
 import { ProgressSpinner } from "primeng/progressspinner";
-import { Subject, SubjectsResponse } from '../../interfaces';
+import { Exam, Subject, SubjectsResponse } from '../../interfaces';
+import { Subject as DestroySubject, takeUntil } from 'rxjs';
+import { selectLoader } from '../../../store/questions/question.selector';
+import { Store } from '@ngrx/store';
+import { hideLoader, showLoader } from '../../../store/questions/questions.action';
 @Component({
   selector: 'app-subjects',
   imports: [PanelMenuModule, CommonModule, ButtonModule, InputTextModule, FormsModule, CardModule, ProgressSpinner],
@@ -16,40 +20,43 @@ import { Subject, SubjectsResponse } from '../../interfaces';
   styleUrl: './subjects.component.css'
 })
 export class SubjectsComponent {
-  loading: boolean = false
   showAll = false
-  subjects: any[] = []
-  exam: any = []
+  subjects: Subject[] = []
+  exam: Exam[] = []
   constructor(private service: ServicesService, private router: Router) { }
-
+  private _store = inject(Store);
+  loader$ = this._store.select(selectLoader);
+  private destroy$ = new DestroySubject<void>();
   ngOnInit() {
     this.getallsubject()
   }
 
   getallsubject() {
-    this.loading = true;
-    this.service.getsubjects().subscribe({
-      next: (res: SubjectsResponse) => {
-        this.subjects = res.subjects;
-        console.log('the subjects', this.subjects);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error loading subjects:', err);
-        this.loading = false;
-      }
-    });
+    this._store.dispatch(showLoader())
+    this.service.getsubjects().pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: SubjectsResponse) => {
+          this.subjects = res.subjects;
+          console.log('the subjects', this.subjects);
+          this._store.dispatch(hideLoader())
+        },
+        error: (err) => {
+          console.error('Error loading subjects:', err);
+          this._store.dispatch(hideLoader())
+        }
+      });
   }
   getexam(examId: string) {
-    this.loading = true
-    this.service.getExamOnSubject(examId).subscribe({
-      next: (exam) => {
-        this.loading = false
-      },
-      error: (err) => {
-        console.error('Error loading exam:', err);
-      }
-    });
+    this._store.dispatch(showLoader())
+    this.service.getExamOnSubject(examId).pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (exam) => {
+          this._store.dispatch(hideLoader())
+        },
+        error: (err) => {
+          console.error('Error loading exam:', err);
+        }
+      });
     this.router.navigate(['/Dashboard/exam', examId]);
 
   }

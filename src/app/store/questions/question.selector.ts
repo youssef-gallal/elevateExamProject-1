@@ -13,3 +13,7 @@ export const selectQuestionsLoading = createSelector(
     selectQuestionsState,
     (state) => state.loading
 );
+export const selectLoader = createSelector(
+    selectQuestionsState,
+    (state) => state.loader
+);

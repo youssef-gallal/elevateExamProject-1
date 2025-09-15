@@ -2,15 +2,17 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ServicesService } from '../service/services.service';
 import { CardModule } from 'primeng/card';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Store } from '@ngrx/store';
 import { ExamQuestionComponent } from "./exam-question/exam-question.component";
 import { DialogModule } from 'primeng/dialog';
-import { selectQuestions, selectQuestionsLoading } from '../../../store/questions/question.selector';
-import { loader } from '../../../store/questions/questions.action';
+import { selectLoader, selectQuestions, selectQuestionsLoading } from '../../../store/questions/question.selector';
+import { hideLoader, loader, showLoader } from '../../../store/questions/questions.action';
 import { ExamResultComponent } from "./exam-result/exam-result.component";
 import { ExamReviewComponent } from "./exam-review/exam-review.component";
+import { Exam, Question, ExamSubmitResult, ExamScore, ExamResponse } from '../../interfaces';
+
 @Component({
   selector: 'app-exam-details',
   imports: [CardModule, CommonModule, ProgressSpinner, ExamQuestionComponent, DialogModule, ExamResultComponent, ExamReviewComponent],
@@ -21,79 +23,68 @@ export class ExamDetailsComponent implements OnInit {
   visible = false;
   header = '';
   activeStep: 'exam' | 'result' | 'review' = 'exam';
-  score: any;
-  incorrectQuestions: any[] = [];
-  loading: boolean = false
-  selectedAnswers: { [key: string]: string } = {};   // ✅ add this
 
-  exams: boolean = true
-  exam: any;
-  questions: any[] = [];
+  score: ExamScore | null = null;
+  incorrectQuestions: Question[] = [];
+  selectedAnswers: { [key: string]: string } = {};
+
+  exams = true;
+  exam: Exam[] = [];
+  questions: Question[] = [];
   examId: string | null = null;
-  questionsId: any;
-  examName: string = ''
-  _service = inject(ServicesService)
-  private _store = inject(Store)
+  questionsId: string | null = null;
+  examName = '';
+
+  private _service = inject(ServicesService);
+  private _store = inject(Store);
+
   constructor(private route: ActivatedRoute) { }
 
   questions$ = this._store.select(selectQuestions);
   loading$ = this._store.select(selectQuestionsLoading);
+  loader$ = this._store.select(selectLoader);
 
   ngOnInit() {
-    this.getExamOnSubject()
+    this.getExamOnSubject();
   }
 
   getExamOnSubject() {
-    this.loading = true;
-    this.examId = this.route.snapshot.paramMap.get('id');
-    this.loading = true;
+    this._store.dispatch(showLoader())
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.exams = false;
-      this.loading = false;
+      this._store.dispatch(hideLoader())
       return;
     }
     this.examId = id;
-    this._service.getExamOnSubject(id).subscribe((res: any) => {
+    this._service.getExamOnSubject(id).subscribe((res: ExamResponse) => {
       if (res.exams && res.exams.length > 0) {
         this.exams = true;
         this.exam = res.exams;
-        this.questionsId = this.exam[0]?._id;
+        console.log(res.exams);
+
+        this.questionsId = this.exam[0]?._id ?? null;
         this.examName = this.exam[0].title;
       } else {
         this.exams = false;
       }
-      this.loading = false;
+      this._store.dispatch(hideLoader())
     });
-
-    this._service.getExamOnSubject(this.examId).subscribe((res: any) => {
-      if (res.exams && res.exams.length > 0) {
-        this.exams = true;
-        this.exam = res.exams
-        console.log(this.exam);
-        this.questionsId = this.exam[0]?._id
-        console.log('questionid', this.questionsId);
-        this.examName = this.exam[0].title
-        console.log(this.examName);
-        this.loading = false;
-      } else {
-        this.exams = false;
-        this.loading = false;
-      }
-      console.log('exams :', this.exams);
-    })
   }
+
   openExam() {
     this.visible = true;
     this.header = this.examName;
     this.activeStep = 'exam';
-    this._store.dispatch(loader({ examId: this.questionsId }));
+    if (this.questionsId) {
+      this._store.dispatch(loader({ examId: this.questionsId }));
+    }
   }
 
-  onSubmit(result: { score: any, incorrect: any[], selected: any }) {
+  onSubmit(result: ExamSubmitResult) {
     this.score = result.score;
     this.incorrectQuestions = result.incorrect;
-    this.selectedAnswers = result.selected;   // <-- keep reference
+    this.selectedAnswers = result.selected;
     this.activeStep = 'result';
     this.header = 'Exam Result';
   }

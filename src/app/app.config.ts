@@ -7,11 +7,11 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { Base_Url } from 'auth';
-import { authInterceptor } from './auth/auth.interceptor';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { questionsReducer } from './store/questions/questions.reducer';
 import { QuestionsEffects } from './store/questions/question.efect';
+import { authInterceptor } from './auth/interceptor/auth.interceptor';
 
 
 export const appConfig: ApplicationConfig = {

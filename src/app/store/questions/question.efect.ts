@@ -16,7 +16,6 @@ export class QuestionsEffects {
                     map((response) => QuestionsActions.updateQuestion({
                         questions: response
                     })),
-                    catchError(error => of(/* handle error */))
                 )
             )
         )

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthEndPoint } from './enums/AuthEndPoint';
 import { AuthAdaptorService } from './adaptor/auth-adaptor.service';
 import { Base_Url } from './base-url';
-import { AdaptedAuthResponse, AdaptedforgetResponse, AdaptedVerifyResponse, AuthResponse, ForgetResponse, ForgotPasswordRequest, LoginRequest, MessageResponse, RegisterRequest, ResetPasswordRequest, ResetResponse, VerifyCodeRequest, verifyCodeResponse } from './interface/interfaces';
+import { AdaptedAuthResponse, AdaptedForgetResponse, AdaptedVerifyResponse, AuthResponse, ForgetResponse, ForgotPasswordRequest, LoginRequest, MessageResponse, RegisterRequest, ResetPasswordRequest, ResetResponse, VerifyCodeRequest, verifyCodeResponse } from './interface/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class AuthService {
         catchError(err => of(err)));
   }
 
-  forgetPassword(data: ForgotPasswordRequest): Observable<AdaptedforgetResponse> {
+  forgetPassword(data: ForgotPasswordRequest): Observable<AdaptedForgetResponse> {
     return this._httpClient.post<MessageResponse>(this._base_Url + AuthEndPoint.forgotPassword, data)
       .pipe(
         map((res: MessageResponse) => this._authadaptorService.forget(res)),

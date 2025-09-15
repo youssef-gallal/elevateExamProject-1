@@ -1,21 +1,8 @@
-// import { Component, EventEmitter, Input, Output } from '@angular/core';
-// import { CommonModule } from '@angular/common';
 
-// @Component({
-//   selector: 'app-exam-result',
-//   standalone: true,
-//   imports: [CommonModule],
-//   templateUrl: './exam-result.component.html',
-//   styleUrls: ['./exam-result.component.css']
-// })
-// export class ExamResultComponent {
-//   @Input() score!: { percentage: number, correct: number, incorrect: number };
-//   @Output() back = new EventEmitter<void>();
-//   @Output() review = new EventEmitter<void>();
-// }
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
+import { ExamScore } from '../../../interfaces';
 
 @Component({
   selector: 'app-exam-result',
@@ -25,14 +12,18 @@ import { ChartModule } from 'primeng/chart';
   styleUrls: ['./exam-result.component.css']
 })
 export class ExamResultComponent {
-  @Input() score!: { percentage: number, correct: number, incorrect: number };
+
+  @Input() score: ExamScore | null = null;
   @Output() back = new EventEmitter<void>();
   @Output() review = new EventEmitter<void>();
 
   data: any;
   options: any;
 
+
   ngOnInit() {
+    if (!this.score) return;
+
     this.data = {
       labels: ['Correct', 'Incorrect'],
       datasets: [
@@ -58,4 +49,5 @@ export class ExamResultComponent {
       }
     };
   }
+
 }
