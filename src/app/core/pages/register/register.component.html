@@ -1,0 +1,102 @@
+<p-toast></p-toast>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="w-100" style="max-width: 500px;">
+        <h1 class="h2 text-dark fw-bold mb-4">Sign up</h1>
+        <form [formGroup]="registerForm">
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText id="username" formControlName="username" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">User Name</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['username']" [messages]="{
+            required: 'Required',
+            minlength: 'UserName must be at least 3 characters'
+          }" />
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Fname" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="Fname">First Name</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['Fname']" [messages]="{
+            required: 'Required',
+            minlength: 'First name must be at least 3 characters'
+          }" />
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Lname" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="Lname">Last Name</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['Lname']" [messages]="{
+            required: 'Required',
+            minlength: 'Last name must be at least 3 characters'
+          }" />
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Email" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label>Email</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['Email']" [messages]="{
+            required: 'Required',
+            email: 'Not email format'
+          }" />
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" formControlName="password" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="password">Password</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['password']" [messages]="{
+            required: 'Required',
+            minlength: 'Password must be at least 8 characters'
+          }" />
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" formControlName="rePassword"
+                        class="form-control bg-white text-dark" autocomplete="off" />
+                    <label for="rePassword">Confirm Password</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['rePassword']" [messages]="{
+            required: 'Required',
+            minlength: 'Confirm password must be at least 8 characters'
+          }" />
+            </div>
+
+            <div class="mb-4">
+                <p-floatlabel variant="in">
+                    <input formControlName="phone" pInputText type="tel" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="phone">Phone</label>
+                </p-floatlabel>
+                <app-form-error [control]="formControls['phone']" [messages]="{
+            required: 'Required'
+          }" />
+            </div>
+
+            <p class="text-center text-dark mt-2 mb-3">
+                Already have an account ?
+                <a routerLink="/login" class="text-primary text-decoration-none">Login</a>
+            </p>
+
+            <div class="button mb-4">
+                <p-button (click)="submit()" size="large" styleClass="bg-primary w-100 text-white border-none"
+                    [disabled]="registerForm.invalid" label="Create Account">
+                </p-button>
+            </div>
+        </form>
+    </div>
+</div>

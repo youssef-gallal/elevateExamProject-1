@@ -1,0 +1,70 @@
+.results-container {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.circular-progress {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(#4CAF50 calc(var(--percentage) * 3.6deg), #f0f0f0 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.inner-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.percentage {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.score-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.correct,
+.incorrect {
+    text-align: center;
+}
+
+.correct .label {
+    color: #4CAF50;
+}
+
+.incorrect .label {
+    color: #F44336;
+}
+
+.count {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}

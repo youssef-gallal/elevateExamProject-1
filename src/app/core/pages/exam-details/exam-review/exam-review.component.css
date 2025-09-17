@@ -1,0 +1,9 @@
+.correct-answer {
+    color: green;
+    font-weight: bold;
+}
+
+.incorrect-answer {
+    color: red;
+    text-decoration: line-through;
+}

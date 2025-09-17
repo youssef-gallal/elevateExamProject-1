@@ -1,0 +1,19 @@
+.intro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    width: 80%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.intro img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex-grow: 1;
+}

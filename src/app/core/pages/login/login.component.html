@@ -1,0 +1,45 @@
+<p-toast></p-toast>
+<div class="d-flex justify-content-center align-items-center mt-5">
+    <div class="w-100" style="max-width: 400px;">
+        <h1 class="text-dark fw-bold mb-3">Sign in</h1>
+
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText formControlName="Email" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">Enter Email</label>
+                </p-floatlabel>
+
+                <app-form-error [control]="formControls['Email']" [messages]="{
+            required: 'Required',
+            email: 'Not email format'
+          }" />
+            </div>
+
+            <div class="mb-3">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" formControlName="password" class="form-control bg-white text-dark"
+                        autocomplete="off" />
+                    <label for="username">Password</label>
+                </p-floatlabel>
+
+                <app-form-error [control]="formControls['password']" [messages]="{
+            required: 'Required',
+            minlength: 'Password must be at least 8 characters'
+          }" />
+            </div>
+
+            <div class="mt-2 mb-3 text-end">
+                <a class="text-primary text-decoration-none" routerLink="/forgetPassword">Recover password?</a>
+            </div>
+
+            <div class="button mb-4">
+                <p-button [type]="'submit'" size="large" styleClass="bg-primary w-100 text-white border-none"
+                    [disabled]="loginForm.invalid" label="Sign in">
+                </p-button>
+            </div>
+        </form>
+    </div>
+</div>

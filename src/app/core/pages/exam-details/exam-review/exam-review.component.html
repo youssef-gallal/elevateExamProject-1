@@ -1,0 +1,44 @@
+@if (incorrectQuestions.length) {
+<div class="review-container">
+    <div class="d-flex justify-content-between mb-3">
+        <p class="text-blue fs-4">
+            Reviewing Incorrect Answers ({{ reviewIndex + 1 }} of {{ incorrectQuestions.length }})
+        </p>
+    </div>
+
+    <div class="mb-4 p-2 border rounded">
+        <h3 class="mb-3">{{ incorrectQuestions[reviewIndex].question }}</h3>
+        <div class="ms-3">
+            @for (ans of incorrectQuestions[reviewIndex].answers; track $index) {
+            <div class="mb-1">
+                <p-radioButton [name]="'review_' + reviewIndex" [value]="ans.key" [disabled]="true"
+                    [ngModel]="getSelectedAnswerForReview(incorrectQuestions[reviewIndex])" class="mx-2">
+                </p-radioButton>
+
+                <label class="ms-2" [ngClass]="{
+            'correct-answer': ans.key === incorrectQuestions[reviewIndex].correct,
+            'incorrect-answer': ans.key === getSelectedAnswerForReview(incorrectQuestions[reviewIndex]) &&
+                                ans.key !== incorrectQuestions[reviewIndex].correct
+          }">
+                    {{ ans.answer }}
+                </label>
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <button class="btn btn-secondary" (click)="prevReviewQuestion()" [disabled]="reviewIndex === 0">
+            Previous
+        </button>
+
+        @if (reviewIndex !== incorrectQuestions.length - 1) {
+        <button class="btn btn-primary" (click)="nextReviewQuestion()">Next</button>
+        }
+
+        @if (reviewIndex === incorrectQuestions.length - 1) {
+        <button class="btn btn-primary" (click)="backToResults.emit()">Back to Results</button>
+        }
+    </div>
+</div>
+}

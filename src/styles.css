@@ -9,29 +9,50 @@ body {
 }
 
 .bg-blue {
-    background: rgba(68, 97, 242, 1) !important;
+    background: rgba(68, 97, 242, 1);
 }
 
 .text-blue {
-    color: rgba(68, 97, 242, 1) !important;
+    color: rgba(68, 97, 242, 1);
 }
 
 .text-black {
-    color: black !important;
+    color: black;
 }
 
 .text-white {
-    color: white !important;
+    color: white;
 }
 
 .text-off {
-    color: rgba(108, 115, 127, 1) !important;
+    color: rgba(108, 115, 127, 1);
 }
 
-.br-20 {
-    border-radius: 20px;
+.br-50 {
+    border-radius: 50px;
+}
+
+.br-30 {
+    border-radius: 30px;
 }
 
 .bg-gray {
-    background: rgba(240, 244, 252, 1) !important;
+    background: #f7f7f7;
+}
+
+input:focus {
+    border: 2px solid blue;
+}
+
+input {
+    background: white;
+
+}
+
+::ng-deep .p-card {
+    background-color: white;
+}
+
+::ng-deep .p-iconfield input {
+    background-color: white;
 }

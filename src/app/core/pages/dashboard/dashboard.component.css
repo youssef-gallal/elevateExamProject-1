@@ -1,0 +1,76 @@
+::ng-deep .p-panelmenu div {
+    background-color: white;
+    border: none;
+}
+
+::ng-deep .p-panelmenu div a {
+    color: rgba(105, 111, 121, 1);
+}
+
+::ng-deep .p-panelmenu div:hover {
+    background-color: #eee;
+}
+
+
+::ng-deep .p-iconfield input {
+    border: #eee !important;
+    background-color: #eee !important;
+    width: 100%;
+}
+
+.sidebar-navigation {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 278px;
+    background: white;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.main-content {
+    margin-left: 278px;
+    width: calc(100% - 278px);
+    padding: 1rem;
+}
+
+.logo {
+    max-width: 150px;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Mobile styles */
+@media (max-width: 767.98px) {
+    .sidebar-navigation {
+        transform: translateX(-100%);
+        z-index: 1100;
+    }
+
+    .sidebar-navigation.d-none {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-navigation:not(.d-none) {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .mobile-menu-btn {
+        background: transparent;
+        border: none;
+        padding: 0.5rem;
+        font-size: 1.25rem;
+        color: #696f79;
+        z-index: 1200;
+    }
+
+}

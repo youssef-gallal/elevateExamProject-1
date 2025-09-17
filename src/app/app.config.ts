@@ -5,13 +5,33 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { Base_Url } from 'auth';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { questionsReducer } from './store/questions/questions.reducer';
+import { QuestionsEffects } from './store/questions/question.efect';
+import { authInterceptor } from './auth/interceptor/auth.interceptor';
+
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideAnimationsAsync(),
-  providePrimeNG({
-    theme: {
-      preset: Aura
-    }
-  })
-  ]
+    providers: [
+        provideAnimationsAsync(),
+        providePrimeNG({
+            theme: {
+                preset: Aura
+            }
+        }),
+        {
+            provide: Base_Url,
+            useValue: 'https://exam.elevateegy.com/api/v1'
+        },
+        provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([authInterceptor])),
+        provideStore({ questions: questionsReducer }),
+        provideEffects([QuestionsEffects]),
+    ]
 }
+
+
+
+

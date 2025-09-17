@@ -1,0 +1,18 @@
+input:focus {
+    border: 2px solid blue !important;
+}
+
+input {
+    background: white !important;
+
+}
+
+::ng-deep .p-inputnumber-input {
+    background-color: white !important;
+    color: black !important;
+    border: 2px solid blue !important;
+}
+
+::ng-deep .p-button {
+    border-radius: 40px !important;
+}

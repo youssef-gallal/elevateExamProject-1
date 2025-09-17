@@ -1,0 +1,9 @@
+::ng-deep .p-card {
+    background-color: white !important;
+    color: black !important;
+}
+
+::ng-deep .p-dialog {
+    background-color: white !important;
+    color: black !important;
+}
