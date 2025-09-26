@@ -19,7 +19,7 @@
 @if (!exams) {
 <h1>No Exams Available ! </h1>
 }
-@if (loader$ |async)
+@if (loading$ |async)
 {
 <div class="flex justify-content-center text-center" style=" height: 200px;">
     <p-progress-spinner ariaLabel="loading" />
@@ -38,7 +38,7 @@
 
 
         <app-exam-review *ngSwitchCase="'review'" [incorrectQuestions]="incorrectQuestions"
-            [selectedAnswers]="selectedAnswers" (backToResults)="backToResults()">
+            [selectedAnswers]="selectedAnswers" (reee)="exit()">
         </app-exam-review>
 
     </ng-container>

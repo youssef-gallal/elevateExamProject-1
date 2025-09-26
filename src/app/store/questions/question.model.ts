@@ -29,7 +29,6 @@ export interface Question {
 
 export interface QuestionsState {
     questions: Question[];
-    loading: boolean;
     loader: boolean;
 }
 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,36 +10,49 @@ import { InputIcon } from 'primeng/inputicon';
 import { AvatarModule } from 'primeng/avatar';
 import { IconField } from 'primeng/iconfield';
 import { ButtonModule } from 'primeng/button';
-import { ServicesService } from '../service/services.service';
+import { AuthService } from 'auth';
+import { Subject, takeUntil } from 'rxjs';
+import { SidebarItem } from '../../interfaces';
 @Component({
   selector: 'app-dashboard',
-  imports: [PanelMenuModule, CommonModule, AvatarModule, ButtonModule, InputTextModule, InputIcon, IconField, FormsModule, CardModule, RouterOutlet], templateUrl: './dashboard.component.html',
+  imports: [PanelMenuModule, CommonModule, AvatarModule, ButtonModule, InputTextModule, InputIcon, IconField, FormsModule, CardModule, RouterOutlet, RouterLink, RouterLinkActive],
+  templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
 
-  items: MenuItem[] | undefined;
+  items: SidebarItem[] = [];
   sidebarVisible = false;
-  constructor(private service: ServicesService, private route: Router) { }
+  private destroy$ = new Subject<void>();
+  constructor(private route: Router, private authService: AuthService) { }
   ngOnInit() {
     this.items = [
       {
         label: 'Dashboard',
         icon: 'pi pi-home',
-        command: () => {
-          this.route.navigateByUrl('/Dashboard')
-        },
+        routerLink: '/Dashboard'
       },
       {
         label: 'Quiz History',
         icon: 'pi pi-history',
+        routerLink: '/Dashboard/history'
       },
       {
         label: 'Log Out',
         icon: 'pi pi-sign-out',
         command: () => {
-          localStorage.removeItem('token');
-          this.route.navigateByUrl('/login')
+          this.authService.logout()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => {
+                localStorage.removeItem('token');
+                this.route.navigateByUrl('/login');
+              },
+              error: (err) => {
+                localStorage.removeItem('token');
+                this.route.navigateByUrl('/login');
+              }
+            });
         }
       }
     ]
@@ -59,5 +72,8 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

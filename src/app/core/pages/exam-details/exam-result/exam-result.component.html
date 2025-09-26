@@ -1,24 +1,21 @@
-<div class="results-container" *ngIf="score as s">
-    <div class="d-flex">
-        <div class="circular-progress" [style.--percentage]="s.percentage">
-            <div class="inner-circle">
-                <span class="percentage">{{ s.percentage }}%</span>
+<div class="results-container">
+    @if (score) {
+    <div class="d-flex flex-column align-items-center">
+        <p-chart type="doughnut" [data]="data" [options]="options" style="width: 300px; height: 300px;"></p-chart>
+
+        <div class="score-breakdown d-flex justify-content-around w-100 mt-4">
+            <div class="correct text-center">
+                <span class="label d-block">Correct</span>
+                <span class="count fs-5 fw-bold text-success">{{ score.correct }}</span>
+            </div>
+            <div class="incorrect text-center">
+                <span class="label d-block">Incorrect</span>
+                <span class="count fs-5 fw-bold text-danger">{{ score.incorrect }}</span>
             </div>
         </div>
-
-        <div class="score-breakdown">
-            <div class="correct">
-                <span class="label">Correct</span>
-                <span class="count">{{ s.correct }}</span>
-            </div>
-            <div class="incorrect">
-                <span class="label">Incorrect</span>
-                <span class="count">{{ s.incorrect }}</span>
-            </div>
+        <div class="action-buttons mt-3">
+            <button class="btn btn-primary" (click)="review.emit()">Review wrong Answers</button>
         </div>
     </div>
-
-    <div class="action-buttons mt-3">
-        <button class="btn btn-primary" (click)="review.emit()">Review wrong Answers</button>
-    </div>
+    }
 </div>

@@ -4,7 +4,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { ProgressSpinner } from "primeng/progressspinner";
 import { Store } from '@ngrx/store';
-import { loader } from '../../../../store/questions/questions.action';
+import { loader, resetQuestions } from '../../../../store/questions/questions.action';
 import { selectQuestions, selectQuestionsLoading } from '../../../../store/questions/question.selector';
 import { Question } from '../../../interfaces';
 
@@ -37,6 +37,7 @@ export class ExamQuestionComponent implements OnChanges {
   private _store = inject(Store);
   questions$ = this._store.select(selectQuestions);
   loading$ = this._store.select(selectQuestionsLoading);
+
 
 
   ngOnChanges() {
@@ -92,26 +93,42 @@ export class ExamQuestionComponent implements OnChanges {
   }
 
   submitAnswers(questions: Question[]) {
-    this.calculateResults(questions);
-    this.scorePercentage = Math.round((this.correctAnswers / questions.length) * 100);
-
+    this.correctAnswers = 0;
+    this.incorrectAnswers = 0;
+    this.incorrectQuestions = [];
     this.originalQuestions = [...questions];
-    this.incorrectQuestions = questions.filter(q =>
-      this.selectedAnswers[q._id] !== q.correct
+
+    questions.forEach((question: Question) => {
+      const selectedAnswer = this.selectedAnswers[question._id];
+      const correctAnswer = question.correct;
+
+      if (selectedAnswer === correctAnswer) {
+        this.correctAnswers++;
+      } else {
+        this.incorrectAnswers++;
+        this.incorrectQuestions.push(question); // 👈 store directly
+      }
+    });
+
+    this.scorePercentage = Math.round(
+      (this.correctAnswers / questions.length) * 100
     );
 
     this.submitted.emit({
       score: {
         percentage: this.scorePercentage,
         correct: this.correctAnswers,
-        incorrect: this.incorrectAnswers
+        incorrect: this.incorrectAnswers,
       },
       incorrect: this.incorrectQuestions,
-      selected: this.selectedAnswers
+      selected: this.selectedAnswers,
     });
 
     this.viewMode = 'results';
+    this._store.dispatch(resetQuestions());
+
   }
+
   getSelectedAnswerForReview(index: number): string | undefined {
     const questionId = this.incorrectQuestions[index]._id;
     return this.selectedAnswers[questionId];

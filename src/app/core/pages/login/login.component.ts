@@ -12,11 +12,12 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Subject, takeUntil } from 'rxjs';
 import { FormErrorComponent } from "../form-error/form-error.component";
+import { ButtonComponent } from "../../shared/button/button.component";
 
 @Component({
   selector: 'app-login',
   imports: [RouterLink, FloatLabel, CommonModule, PasswordModule, FormsModule,
-    ReactiveFormsModule, InputTextModule, IftaLabelModule, Button, ToastModule, FormErrorComponent],
+    ReactiveFormsModule, InputTextModule, IftaLabelModule, ToastModule, FormErrorComponent, ButtonComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   providers: [MessageService],
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   initForm() {
     this.loginForm = new FormGroup({
       Email: new FormControl("", [Validators.required, Validators.email]),
-      password: new FormControl("", [Validators.required, Validators.minLength(8)])
+      password: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)])
     });
   }
   get formControls() {

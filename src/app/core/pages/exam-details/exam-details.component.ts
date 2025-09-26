@@ -7,8 +7,8 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 import { Store } from '@ngrx/store';
 import { ExamQuestionComponent } from "./exam-question/exam-question.component";
 import { DialogModule } from 'primeng/dialog';
-import { selectLoader, selectQuestions, selectQuestionsLoading } from '../../../store/questions/question.selector';
-import { hideLoader, loader, showLoader } from '../../../store/questions/questions.action';
+import { selectQuestions, selectQuestionsLoading } from '../../../store/questions/question.selector';
+import { hideLoader, loader } from '../../../store/questions/questions.action';
 import { ExamResultComponent } from "./exam-result/exam-result.component";
 import { ExamReviewComponent } from "./exam-review/exam-review.component";
 import { Exam, Question, ExamSubmitResult, ExamScore, ExamResponse } from '../../interfaces';
@@ -23,11 +23,9 @@ export class ExamDetailsComponent implements OnInit {
   visible = false;
   header = '';
   activeStep: 'exam' | 'result' | 'review' = 'exam';
-
   score: ExamScore | null = null;
   incorrectQuestions: Question[] = [];
   selectedAnswers: { [key: string]: string } = {};
-
   exams = true;
   exam: Exam[] = [];
   questions: Question[] = [];
@@ -42,14 +40,13 @@ export class ExamDetailsComponent implements OnInit {
 
   questions$ = this._store.select(selectQuestions);
   loading$ = this._store.select(selectQuestionsLoading);
-  loader$ = this._store.select(selectLoader);
 
   ngOnInit() {
     this.getExamOnSubject();
   }
 
   getExamOnSubject() {
-    this._store.dispatch(showLoader())
+    this._store.dispatch(loader({ examId: this.questionsId ?? '' }))
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.exams = false;
@@ -78,6 +75,7 @@ export class ExamDetailsComponent implements OnInit {
     this.activeStep = 'exam';
     if (this.questionsId) {
       this._store.dispatch(loader({ examId: this.questionsId }));
+      this._store.dispatch(hideLoader())
     }
   }
 
@@ -94,8 +92,7 @@ export class ExamDetailsComponent implements OnInit {
     this.header = 'Review Answers';
   }
 
-  backToResults() {
-    this.activeStep = 'result';
-    this.header = 'Exam Result';
+  exit() {
+    this.visible = false
   }
 }

@@ -12,6 +12,9 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { FormErrorComponent } from "../form-error/form-error.component";
+import { passwordMatchValidator } from '../../utils/password-match.validator';
+
+
 @Component({
   selector: 'app-register',
   imports: [ToastModule, RouterLink, FloatLabel, RouterModule, RouterLink, InputNumberModule, PasswordModule, FormsModule, ReactiveFormsModule, InputTextModule, IftaLabelModule, Button, FormErrorComponent],
@@ -61,12 +64,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
       ]),
       password: new FormControl("", [
         Validators.required,
-        Validators.minLength(8),
+        Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)
       ]),
       phone: new FormControl("", [
         Validators.required,
       ])
-    },);
+
+    },
+      { validators: passwordMatchValidator('password', 'rePassword') });;
   }
 
 
@@ -116,3 +121,5 @@ export class RegisterComponent implements OnInit, OnDestroy {
       });
   }
 }
+
+

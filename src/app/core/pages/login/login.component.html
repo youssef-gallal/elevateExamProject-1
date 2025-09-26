@@ -35,11 +35,11 @@
                 <a class="text-primary text-decoration-none" routerLink="/forgetPassword">Recover password?</a>
             </div>
 
-            <div class="button mb-4">
-                <p-button [type]="'submit'" size="large" styleClass="bg-primary w-100 text-white border-none"
-                    [disabled]="loginForm.invalid" label="Sign in">
-                </p-button>
+
+            <div class="mb-4">
+                <app-button [label]="'Sign in'" [disabled]="loginForm.invalid"></app-button>
             </div>
+
         </form>
     </div>
 </div>

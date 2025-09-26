@@ -45,3 +45,10 @@ export interface ExamSubmitResult {
     incorrect: Question[];
     selected: { [key: string]: string };
 }
+
+export interface SidebarItem {
+    label: string;
+    icon: string;
+    routerLink?: string;
+    command?: () => void;
+}
