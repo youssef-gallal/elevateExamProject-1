@@ -11,6 +11,9 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from 'auth';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ButtonComponent } from "../../shared/button/button.component";
+import { passwordMatchValidator } from '../../utils/password-match.validator';
+import { FormErrorComponent } from "../form-error/form-error.component";
 
 @Component({
   selector: 'app-forget-password',
@@ -23,6 +26,8 @@ import { takeUntil } from 'rxjs/operators';
     PasswordModule,
     ButtonModule,
     ToastModule,
+    ButtonComponent,
+    FormErrorComponent
   ],
   providers: [MessageService],
   templateUrl: './forgetpassword.component.html',
@@ -46,8 +51,14 @@ export class ForgetPasswordComponent {
   });
 
   resetForm = new FormGroup({
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-  });
+    password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)]),
+    rePassword: new FormControl('', [Validators.required, Validators.minLength(6)])
+  },
+    { validators: passwordMatchValidator('password', 'rePassword') }
+  );
+  get formControls() {
+    return this.resetForm.controls;
+  }
 
   submitEmail() {
     if (this.emailForm.invalid) return;
@@ -105,7 +116,22 @@ export class ForgetPasswordComponent {
         }
       });
   }
+  resendCode() {
+    if (this.emailForm.invalid) return;
 
+    const payload = { email: this.emailForm.value.email! };
+
+    this._authService.forgetPassword(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this._msg.add({ severity: 'success', summary: 'Resent', detail: 'Verification code resent to your email' });
+        },
+        error: (err) => {
+          this._msg.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Failed to resend code' });
+        }
+      });
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
