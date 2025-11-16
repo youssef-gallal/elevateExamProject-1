@@ -52,9 +52,14 @@ export interface ForgetResponse {
     message: string;
     info: string;
 }
+
 export interface verifyCodeResponse {
     status: string;
 }
+export interface logoutResponse {
+    message: string;
+}
+
 export interface ResetResponse {
     message: string;
 }
