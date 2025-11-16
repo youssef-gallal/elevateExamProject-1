@@ -1,20 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-form-error',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  template: `
-    @if (control && control.invalid && (control.touched || control.dirty)) {
-      <div class="form-text text-danger">
-        @for (error of getErrors(); track error) {
-          <div>{{ error }}</div>
-        }
-      </div>
-    }
-  `
+  templateUrl: './form-error.component.html'
 })
 export class FormErrorComponent {
   @Input({ required: true }) control!: AbstractControl | null;

@@ -10,9 +10,9 @@ import { ServicesService } from '../service/services.service';
 import { ProgressSpinner } from "primeng/progressspinner";
 import { Exam, Subject, SubjectsResponse } from '../../interfaces';
 import { Subject as DestroySubject, takeUntil } from 'rxjs';
-import { selectLoader } from '../../../store/questions/question.selector';
+import { selectQuestionsLoading } from '../../../store/questions/question.selector';
 import { Store } from '@ngrx/store';
-import { hideLoader, showLoader } from '../../../store/questions/questions.action';
+import { hideLoader, loader } from '../../../store/questions/questions.action';
 @Component({
   selector: 'app-subjects',
   imports: [PanelMenuModule, CommonModule, ButtonModule, InputTextModule, FormsModule, CardModule, ProgressSpinner],
@@ -25,14 +25,14 @@ export class SubjectsComponent {
   exam: Exam[] = []
   constructor(private service: ServicesService, private router: Router) { }
   private _store = inject(Store);
-  loader$ = this._store.select(selectLoader);
+  loader$ = this._store.select(selectQuestionsLoading);
   private destroy$ = new DestroySubject<void>();
   ngOnInit() {
     this.getallsubject()
   }
 
   getallsubject() {
-    this._store.dispatch(showLoader())
+    this._store.dispatch(loader({ examId: '' }))
     this.service.getsubjects().pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: SubjectsResponse) => {
@@ -46,9 +46,9 @@ export class SubjectsComponent {
         }
       });
   }
-  getexam(examId: string) {
-    this._store.dispatch(showLoader())
-    this.service.getExamOnSubject(examId).pipe(takeUntil(this.destroy$))
+  getexam(subjectId: string) {
+    this._store.dispatch(loader({ examId: subjectId }))
+    this.service.getExamOnSubject(subjectId).pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (exam) => {
           this._store.dispatch(hideLoader())
@@ -57,7 +57,7 @@ export class SubjectsComponent {
           console.error('Error loading exam:', err);
         }
       });
-    this.router.navigate(['/Dashboard/exam', examId]);
+    this.router.navigate(['/Dashboard/exam', subjectId]);
 
   }
   toggleShowAll() {

@@ -1,4 +1,4 @@
-.results-container {
+/* .results-container {
     text-align: center;
     padding: 2rem;
     background: #f8f9fa;
@@ -67,4 +67,18 @@
     justify-content: center;
     gap: 1rem;
     margin-top: 2rem;
+} */
+.results-container {
+    text-align: center;
+    padding: 1rem;
+}
+
+.score-breakdown .label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.score-breakdown .count {
+    font-size: 1.2rem;
+    font-weight: bold;
 }

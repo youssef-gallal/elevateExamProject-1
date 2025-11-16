@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, output, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { Question } from '../../../interfaces';
 export class ExamReviewComponent {
   @Input() incorrectQuestions: Question[] = [];
   @Input() selectedAnswers: { [key: string]: string } = {};
-  @Output() backToResults = new EventEmitter<void>();
+  @Output() reee = new EventEmitter<void>();
 
   reviewIndex = 0;
 
@@ -33,4 +33,5 @@ export class ExamReviewComponent {
       this.reviewIndex--;
     }
   }
+
 }

@@ -2,7 +2,7 @@
     <ng-template pTemplate="header">
         <div class="d-flex justify-content-between align-items-center p-3">
             <h2 class="text-blue">Quizes</h2>
-            <a class="text-blue fs-5 cursor-pointer" (click)="toggleShowAll()">
+            <a class="text-blue fs-5 clickable" (click)="toggleShowAll()">
                 {{ showAll ? 'Show less' : 'View all' }}
             </a>
         </div>
@@ -16,7 +16,7 @@
                         <div class="subject-card">
                             <img [src]="item.icon" alt="{{ item.title }}" class="subject-icon">
                             <div class="subject-title-overlay">
-                                <h3 class="text-white">{{ item.name }}</h3>
+                                <h5>{{ item.name }}</h5>
                                 <p> Voluptatem aut ut dignissimos blanditiis</p>
                             </div>
                         </div>

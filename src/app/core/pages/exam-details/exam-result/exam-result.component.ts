@@ -1,5 +1,4 @@
-
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { ExamScore } from '../../../interfaces';
@@ -11,7 +10,7 @@ import { ExamScore } from '../../../interfaces';
   templateUrl: './exam-result.component.html',
   styleUrls: ['./exam-result.component.css']
 })
-export class ExamResultComponent {
+export class ExamResultComponent implements OnInit {
 
   @Input() score: ExamScore | null = null;
   @Output() back = new EventEmitter<void>();
@@ -19,7 +18,6 @@ export class ExamResultComponent {
 
   data: any;
   options: any;
-
 
   ngOnInit() {
     if (!this.score) return;
@@ -49,5 +47,4 @@ export class ExamResultComponent {
       }
     };
   }
-
 }
